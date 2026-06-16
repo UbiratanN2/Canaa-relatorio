@@ -1,694 +1,77 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Canaã Telecom — Relatório N2 · Fev 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-:root{
-  --b0:#030d1f;--b1:#051530;--b2:#082060;--b3:#0a33a0;--b4:#1a56d6;
-  --b5:#2979ff;--b6:#5b9bff;--b7:#a8c8ff;
-  --cyan:#00e5ff;--white:#eef4ff;--green:#00e676;--red:#ff5252;--yellow:#ffd740;
-  --border:rgba(41,121,255,0.25);
-}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{background:var(--b0);color:var(--white);font-family:'Exo 2',sans-serif;overflow-x:hidden;min-height:100vh;}
-#cvs{position:fixed;inset:0;z-index:0;pointer-events:none;}
-.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-.bg-grad{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 10%,rgba(10,51,160,.55) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 80%,rgba(8,32,96,.6) 0%,transparent 60%);}
-.bg-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(41,121,255,.018) 3px,rgba(41,121,255,.018) 4px);animation:scanMove 8s linear infinite;}
-@keyframes scanMove{from{background-position:0 0}to{background-position:0 100px}}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(41,121,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(41,121,255,.06) 1px,transparent 1px);background-size:60px 60px;animation:gridPulse 4s ease-in-out infinite;}
-@keyframes gridPulse{0%,100%{opacity:.6}50%{opacity:1}}
-.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;}
-.orb1{width:500px;height:500px;background:rgba(26,86,214,.28);top:-100px;left:-100px;animation:o1 14s ease-in-out infinite alternate;}
-.orb2{width:400px;height:400px;background:rgba(0,229,255,.1);bottom:-80px;right:-60px;animation:o2 18s ease-in-out infinite alternate;}
-.orb3{width:300px;height:300px;background:rgba(41,121,255,.12);top:40%;left:40%;animation:o3 10s ease-in-out infinite alternate;}
-@keyframes o1{from{transform:translate(0,0)scale(1)}to{transform:translate(60px,40px)scale(1.1)}}
-@keyframes o2{from{transform:translate(0,0)scale(1)}to{transform:translate(-40px,-60px)scale(1.15)}}
-@keyframes o3{from{transform:translate(0,0)}to{transform:translate(30px,-30px)}}
-
-/* ── LAYOUT ── */
-.shell{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:0 32px 60px;}
-
-/* ── NAVBAR ── */
-.nav{
-  position:sticky;top:0;z-index:200;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:70px;
-  background:rgba(3,13,31,.82);
-  backdrop-filter:blur(20px) saturate(1.5);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 4px 32px rgba(0,0,0,.5);
-}
-.nav-right{display:flex;gap:10px;align-items:center;}
-.nbadge{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 13px;border:1px solid var(--border);border-radius:3px;background:rgba(41,121,255,.08);color:var(--b6);letter-spacing:1px;}
-.nbadge-live{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--green);padding:5px 13px;border:1px solid rgba(0,230,118,.3);border-radius:3px;background:rgba(0,230,118,.07);letter-spacing:1px;font-family:'Share Tech Mono',monospace;}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:livePulse 1.6s ease-in-out infinite;}
-@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
-
-/* ══════════════════════════════════════════
-   SVG LOGO — CANAÃ TELECOM
-══════════════════════════════════════════ */
-.logo-wrap{
-  display:flex;align-items:center;
-  cursor:pointer;
-  gap:0;
-  user-select:none;
-}
-
-/* Globe */
-.logo-globe{
-  transition:transform .4s cubic-bezier(.34,1.56,.64,1), filter .3s;
-  transform-origin:center;
-}
-.logo-wrap:hover .logo-globe{
-  transform:rotate(20deg) scale(1.08);
-  filter:drop-shadow(0 0 10px rgba(0,229,255,.7));
-}
-
-/* Plane */
-.logo-plane{
-  transition:transform .5s cubic-bezier(.34,1.56,.64,1), filter .3s;
-  transform-origin:center;
-}
-.logo-wrap:hover .logo-plane{
-  transform:translate(6px,-6px) scale(1.15);
-  filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
-}
-
-/* Ring orbit */
-.logo-ring{
-  transform-origin:center;
-  animation:ringRotate 8s linear infinite;
-}
-.logo-wrap:hover .logo-ring{
-  animation:ringRotate 2s linear infinite;
-  filter:drop-shadow(0 0 4px var(--cyan));
-}
-@keyframes ringRotate{from{transform:rotateX(65deg) rotate(0deg)}to{transform:rotateX(65deg) rotate(360deg)}}
-
-/* Text CANAÃ */
-.logo-text-canaa{
-  font-family:'Rajdhani',sans-serif;
-  font-size:28px;font-weight:700;
-  fill:#ffffff;
-  letter-spacing:2px;
-  transition:all .3s;
-}
-.logo-wrap:hover .logo-text-canaa{
-  fill:var(--cyan);
-  filter:drop-shadow(0 0 8px rgba(0,229,255,.6));
-}
-
-/* Each letter animates individually */
-.logo-letter{
-  display:inline-block;
-  transition:transform .3s ease, color .3s;
-}
-.logo-wrap:hover .logo-letter:nth-child(1){animation:letterBounce .5s .00s ease both;}
-.logo-wrap:hover .logo-letter:nth-child(2){animation:letterBounce .5s .05s ease both;}
-.logo-wrap:hover .logo-letter:nth-child(3){animation:letterBounce .5s .10s ease both;}
-.logo-wrap:hover .logo-letter:nth-child(4){animation:letterBounce .5s .15s ease both;}
-.logo-wrap:hover .logo-letter:nth-child(5){animation:letterBounce .5s .20s ease both;}
-@keyframes letterBounce{0%{transform:translateY(0)}40%{transform:translateY(-5px)}70%{transform:translateY(2px)}100%{transform:translateY(0)}}
-
-/* TELECOM text */
-.logo-text-telecom{
-  font-family:'Rajdhani',sans-serif;
-  font-size:11px;font-weight:600;
-  fill:rgba(255,255,255,.55);
-  letter-spacing:5px;
-  transition:all .3s;
-}
-.logo-wrap:hover .logo-text-telecom{
-  fill:var(--b6);
-  letter-spacing:7px;
-  filter:drop-shadow(0 0 4px rgba(91,155,255,.4));
-}
-
-/* Shimmer line under text on hover */
-.logo-underline{
-  transform:scaleX(0);
-  transform-origin:left;
-  transition:transform .4s .1s ease;
-}
-.logo-wrap:hover .logo-underline{transform:scaleX(1);}
-
-/* ── HERO ── */
-.hero{padding:40px 0 32px;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;opacity:0;animation:heroIn .7s .1s ease forwards;}
-@keyframes heroIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:none}}
-.hero-l h1{font-family:'Rajdhani',sans-serif;font-size:clamp(28px,3.5vw,44px);font-weight:700;line-height:1.05;letter-spacing:-.5px;text-shadow:0 0 40px rgba(41,121,255,.4);}
-.hero-l h1 .cyan{color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,.5);}
-.hero-l p{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--b6);letter-spacing:1px;}
-.hero-sep{width:2px;height:70px;background:linear-gradient(180deg,var(--b5),transparent);border-radius:2px;flex-shrink:0;margin-top:4px;}
-.hero-r{font-size:13px;color:var(--b7);max-width:320px;line-height:1.8;padding-top:4px;}
-.hero-r strong{color:var(--cyan);}
-
-/* ── KPI ── */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
-.kpi{
-  background:linear-gradient(135deg,rgba(8,32,96,.7),rgba(3,13,31,.9));
-  border:1px solid var(--border);border-radius:4px;padding:22px 24px;
-  position:relative;overflow:hidden;
-  opacity:0;transform:translateY(18px);
-  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
-  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
-}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-.kpi.k1::before{background:linear-gradient(90deg,var(--b5),var(--cyan));}
-.kpi.k2::before{background:linear-gradient(90deg,var(--green),#00bfa5);}
-.kpi.k3::before{background:linear-gradient(90deg,var(--yellow),#ff9800);}
-.kpi.k4::before{background:linear-gradient(90deg,var(--red),#ff8a65);}
-.kpi::after{content:'';position:absolute;top:0;right:0;width:12px;height:12px;clip-path:polygon(100% 0,0 0,100% 100%);}
-.kpi.k1::after{background:var(--b5)}.kpi.k2::after{background:var(--green)}.kpi.k3::after{background:var(--yellow)}.kpi.k4::after{background:var(--red)}
-.kpi:hover{transform:translateY(-5px) scale(1.01);box-shadow:0 0 40px rgba(41,121,255,.25),0 16px 40px rgba(0,0,0,.4);border-color:rgba(41,121,255,.5);}
-.kpi-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--b6);margin-bottom:12px;}
-.kpi-val{font-family:'Rajdhani',sans-serif;font-size:52px;font-weight:700;line-height:1;letter-spacing:-2px;margin-bottom:6px;}
-.kpi.k1 .kpi-val{color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,.4);}
-.kpi.k2 .kpi-val{color:var(--green);text-shadow:0 0 20px rgba(0,230,118,.35);}
-.kpi.k3 .kpi-val{color:var(--yellow);text-shadow:0 0 20px rgba(255,215,64,.35);}
-.kpi.k4 .kpi-val{color:var(--red);text-shadow:0 0 20px rgba(255,82,82,.35);}
-.kpi-sub{font-size:11px;color:var(--b6);line-height:1.5;}
-.kpi-icon{position:absolute;right:20px;bottom:18px;font-size:32px;opacity:.08;}
-
-/* ── SECTION TITLE ── */
-.sec{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:3px;color:var(--b6);display:flex;align-items:center;gap:10px;margin-bottom:20px;}
-.sec::before{content:'';width:3px;height:15px;background:linear-gradient(180deg,var(--cyan),var(--b5));border-radius:2px;}
-
-/* ── CARDS ── */
-.card{
-  background:linear-gradient(135deg,rgba(8,32,96,.5),rgba(3,13,31,.85));
-  border:1px solid var(--border);border-radius:4px;padding:24px;
-  opacity:0;transform:translateY(14px);
-  transition:box-shadow .3s,border-color .3s,opacity .5s,transform .5s;
-  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-}
-.card:hover{box-shadow:0 0 30px rgba(41,121,255,.15),0 8px 30px rgba(0,0,0,.35);border-color:rgba(41,121,255,.45);}
-.card.in{opacity:1;transform:translateY(0);}
-.g2{display:grid;grid-template-columns:1.3fr .7fr;gap:20px;margin-bottom:20px;}
-.g1{margin-bottom:20px;}
-.ch{position:relative;height:280px;}
-.ch-sm{position:relative;height:250px;}
-
-/* ── CAT LIST ── */
-.catlist{display:flex;flex-direction:column;gap:9px;}
-.catrow{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:3px;cursor:pointer;border:1px solid transparent;transition:all .2s ease;position:relative;overflow:hidden;}
-.catrow::before{content:'';position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(41,121,255,.08);transition:width .3s ease;}
-.catrow:hover::before,.catrow.on::before{width:100%;}
-.catrow:hover{border-color:rgba(41,121,255,.3);transform:translateX(4px);}
-.catrow.on{border-color:rgba(41,121,255,.4);background:rgba(41,121,255,.08);}
-.catrow-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;position:relative;z-index:1;}
-.catrow-name{font-size:13px;font-weight:600;width:145px;flex-shrink:0;position:relative;z-index:1;}
-.catrow-bar-bg{flex:1;background:rgba(41,121,255,.12);border-radius:2px;height:4px;overflow:hidden;position:relative;z-index:1;}
-.catrow-bar{height:100%;border-radius:2px;width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1);}
-.catrow-n{font-family:'Share Tech Mono',monospace;font-size:13px;width:26px;text-align:right;flex-shrink:0;position:relative;z-index:1;}
-.catrow-t{font-family:'Share Tech Mono',monospace;font-size:11px;width:54px;text-align:right;flex-shrink:0;position:relative;z-index:1;}
-.tb{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;font-family:'Share Tech Mono',monospace;font-weight:500;}
-.hi{background:rgba(255,82,82,.15);color:var(--red);border:1px solid rgba(255,82,82,.25);}
-.md{background:rgba(255,215,64,.12);color:var(--yellow);border:1px solid rgba(255,215,64,.25);}
-.lo{background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.25);}
-
-/* ── FILTERS ── */
-.filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:18px;}
-.filters label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--b6);letter-spacing:1px;margin-right:4px;}
-.fbtn{padding:4px 13px;font-family:'Exo 2',sans-serif;font-size:12px;font-weight:600;border:1px solid rgba(41,121,255,.25);border-radius:2px;background:transparent;color:var(--b6);cursor:pointer;letter-spacing:.5px;transition:all .18s ease;clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,0 100%);}
-.fbtn:hover{border-color:var(--b5);color:var(--cyan);background:rgba(41,121,255,.1);}
-.fbtn.on{border-color:var(--b5);color:var(--cyan);background:rgba(41,121,255,.15);box-shadow:0 0 10px rgba(41,121,255,.2);}
-
-/* ── TABLE ── */
-.tw{overflow-x:auto;border-radius:3px;border:1px solid var(--border);}
-table{width:100%;border-collapse:collapse;font-size:12px;}
-thead tr{background:linear-gradient(135deg,rgba(10,51,160,.6),rgba(5,21,48,.8));}
-th{padding:11px 15px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--b6);white-space:nowrap;cursor:pointer;user-select:none;border-bottom:1px solid var(--border);transition:color .15s;}
-th:hover{color:var(--cyan);}th.sorted{color:var(--cyan);}
-th .si{opacity:.3;margin-left:3px;font-size:10px;}th.sorted .si{opacity:1;}
-tbody tr{border-top:1px solid rgba(41,121,255,.12);transition:background .12s;animation:rowIn .2s ease both;}
-@keyframes rowIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
-tbody tr:hover{background:rgba(41,121,255,.07);}
-td{padding:10px 15px;vertical-align:middle;}
-td.mono{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--b6);}
-td.id-c{font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:500;}
-.ctag{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:2px;font-size:11px;font-weight:600;border:1px solid currentColor;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%);}
-.ctag-dot{width:5px;height:5px;border-radius:50%;}
-
-/* ── PAGINATION ── */
-.pager{display:flex;justify-content:space-between;align-items:center;margin-top:16px;}
-.pager-info{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--b6);}
-.pager-btns{display:flex;gap:5px;}
-.pbtn{width:30px;height:30px;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--b6);cursor:pointer;font-size:13px;transition:all .18s;display:flex;align-items:center;justify-content:center;font-family:'Exo 2',sans-serif;}
-.pbtn:hover,.pbtn.on{border-color:var(--b5);color:var(--cyan);background:rgba(41,121,255,.12);}
-
-/* ── TOOLTIP ── */
-#tt{position:fixed;z-index:999;background:rgba(5,21,48,.97);border:1px solid rgba(41,121,255,.4);border-radius:4px;padding:10px 14px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .15s;max-width:210px;box-shadow:0 0 20px rgba(41,121,255,.2),0 8px 30px rgba(0,0,0,.6);}
-#tt.show{opacity:1;}
-#tt-t{font-weight:700;color:var(--cyan);margin-bottom:4px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;font-size:14px;}
-#tt-b{color:var(--b7);line-height:1.8;font-family:'Share Tech Mono',monospace;font-size:11px;}
-
-/* ── FOOTER ── */
-.footer{margin-top:48px;padding:20px 0;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.footer-logo{display:flex;align-items:center;}
-.footer span{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--b6);letter-spacing:1px;opacity:.5;}
-
-::-webkit-scrollbar{width:5px;height:5px;}
-::-webkit-scrollbar-track{background:var(--b0);}
-::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
-
-@media(max-width:960px){
-  .kpi-grid{grid-template-columns:repeat(2,1fr);}
-  .g2{grid-template-columns:1fr;}
-  .shell{padding:0 16px 40px;}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório CGR - Canaã Telecom</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+    h1 { color: #1e3a8a; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; }
+    th, td { padding: 12px; text-align: left; border: 1px solid #ddd; }
+    th { background: #1e3a8a; color: white; }
+    .status-em { background: #fef3c7; color: #854d0e; padding: 4px 8px; border-radius: 4px; }
+    .status-res { background: #d1fae5; color: #065f46; padding: 4px 8px; border-radius: 4px; }
+  </style>
 </head>
 <body>
+  <h1>📊 Relatório CGR - Canaã Telecom</h1>
+  <p><strong>Total de Ocorrências:</strong> <span id="total">0</span></p>
 
-<canvas id="cvs"></canvas>
-<div class="bg">
-  <div class="bg-grad"></div><div class="bg-grid"></div><div class="bg-scan"></div>
-  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
-</div>
-<div id="tt"><div id="tt-t"></div><div id="tt-b"></div></div>
+  <h2>Ocorrências Recentes</h2>
+  <table id="tabela-ocorrencias">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Caixa</th>
+        <th>Impacto</th>
+        <th>Região</th>
+        <th>RFO</th>
+        <th>ETR</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-<!-- ══ NAV ══ -->
-<nav class="nav">
+  <script>
+    async function carregarRelatorio() {
+      try {
+        const response = await fetch('occurrences.json');
+        const data = await response.json();
+        const ocorrencias = data.occurrences || [];
 
-  <!-- ══ SVG LOGO — CANAÃ TELECOM ══ -->
-  <div class="logo-wrap" id="logoWrap" title="Canaã Telecom">
-    <svg id="logoSvg" viewBox="0 0 260 58" width="220" height="52" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="globeGrad" cx="40%" cy="35%" r="60%">
-          <stop offset="0%" stop-color="#4da8ff"/>
-          <stop offset="50%" stop-color="#1a56d6"/>
-          <stop offset="100%" stop-color="#0a1e5e"/>
-        </radialGradient>
-        <radialGradient id="globeGrad2" cx="35%" cy="30%" r="55%">
-          <stop offset="0%" stop-color="#60b8ff" stop-opacity="0.4"/>
-          <stop offset="100%" stop-color="transparent"/>
-        </radialGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="1.5" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="glowStrong">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <clipPath id="globeClip">
-          <circle cx="26" cy="29" r="22"/>
-        </clipPath>
-        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#00e5ff" stop-opacity="0"/>
-          <stop offset="30%" stop-color="#00e5ff" stop-opacity="0.9"/>
-          <stop offset="70%" stop-color="#2979ff" stop-opacity="0.9"/>
-          <stop offset="100%" stop-color="#2979ff" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="shimmerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="transparent"/>
-          <stop offset="50%" stop-color="#00e5ff" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="transparent"/>
-        </linearGradient>
-      </defs>
+        document.getElementById('total').textContent = ocorrencias.length;
 
-      <!-- Globe body -->
-      <g class="logo-globe" id="lgGlobe">
-        <!-- Main sphere -->
-        <circle cx="26" cy="29" r="22" fill="url(#globeGrad)"/>
-        <!-- Highlight shimmer -->
-        <ellipse cx="20" cy="21" rx="9" ry="6" fill="url(#globeGrad2)" opacity="0.7"/>
-        <!-- Globe lines (longitude) clipped inside sphere -->
-        <g clip-path="url(#globeClip)" opacity="0.25">
-          <ellipse cx="26" cy="29" rx="10" ry="22" fill="none" stroke="#a8d8ff" stroke-width="0.8"/>
-          <ellipse cx="26" cy="29" rx="18" ry="22" fill="none" stroke="#a8d8ff" stroke-width="0.6"/>
-          <!-- latitude lines -->
-          <line x1="4" y1="22" x2="48" y2="22" stroke="#a8d8ff" stroke-width="0.7"/>
-          <line x1="4" y1="29" x2="48" y2="29" stroke="#a8d8ff" stroke-width="0.7"/>
-          <line x1="4" y1="36" x2="48" y2="36" stroke="#a8d8ff" stroke-width="0.7"/>
-        </g>
-        <!-- Orbit ring (ellipse around globe) -->
-        <ellipse cx="26" cy="29" rx="28" ry="10" fill="none" stroke="url(#ringGrad)" stroke-width="1.8" opacity="0.85" class="logo-ring" id="lgRing"/>
-        <!-- Ring glow dot -->
-        <circle id="lgDot" cx="54" cy="29" r="2.5" fill="#00e5ff" opacity="0.9">
-          <animateMotion dur="3s" repeatCount="indefinite">
-            <mpath href="#orbitPath"/>
-          </animateMotion>
-        </circle>
-        <path id="orbitPath" d="M 26 19 A 28 10 0 1 1 25.99 19" fill="none"/>
-      </g>
+        const tbody = document.querySelector('#tabela-ocorrencias tbody');
+        tbody.innerHTML = '';
 
-      <!-- Paper plane -->
-      <g class="logo-plane" id="lgPlane" transform="translate(36, 7)">
-        <!-- Plane body -->
-        <polygon points="0,14  16,0  12,8" fill="white" opacity="0.97"/>
-        <polygon points="0,14  16,0   4,16" fill="#a8d8ff" opacity="0.9"/>
-        <!-- Plane tail fin -->
-        <polygon points="0,14  5,12  4,16" fill="#60a5fa" opacity="0.8"/>
-        <!-- Motion trail lines -->
-        <line x1="-3" y1="18" x2="-11" y2="22" stroke="white" stroke-width="1" opacity="0.5"/>
-        <line x1="-1" y1="21" x2="-8" y2="26" stroke="#a8d8ff" stroke-width="0.7" opacity="0.35"/>
-      </g>
+        ocorrencias.sort((a, b) => b.data.localeCompare(a.data));
 
-      <!-- Text: CANAÃ -->
-      <g id="lgCanaa">
-        <text x="58" y="36" class="logo-text-canaa" font-family="Rajdhani,sans-serif" font-size="28" font-weight="700" fill="white" letter-spacing="1.5">
-          <tspan class="logo-letter" id="ll1">C</tspan><tspan class="logo-letter" id="ll2">A</tspan><tspan class="logo-letter" id="ll3">N</tspan><tspan class="logo-letter" id="ll4">A</tspan><tspan class="logo-letter" id="ll5">Ã</tspan>
-        </text>
-        <!-- TELECOM -->
-        <text x="62" y="48" class="logo-text-telecom" font-family="Rajdhani,sans-serif" font-size="10.5" font-weight="600" fill="rgba(255,255,255,0.5)" letter-spacing="5">TELECOM</text>
-        <!-- Underline shimmer -->
-        <rect class="logo-underline" x="58" y="50" width="120" height="1.5" rx="1" fill="url(#shimmerGrad)" id="lgUnderline"/>
-      </g>
-    </svg>
-  </div>
+        ocorrencias.forEach(occ => {
+          const row = document.createElement('tr');
+          const statusClass = occ.status === 'Resolvido' ? 'status-res' : 'status-em';
+          
+          row.innerHTML = `
+            <td>${occ.data || '-'}</td>
+            <td><strong>${occ.caixa || '-'}</strong></td>
+            <td>${occ.impacto || '-'}</td>
+            <td>${occ.regiao || '-'}</td>
+            <td>${occ.rfo || '-'}</td>
+            <td>${occ.etr || '-'}</td>
+            <td><span class="${statusClass}">${occ.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
 
-  <div class="nav-right">
-    <div class="nbadge">FEV / 2026</div>
-    <div class="nbadge-live"><div class="live-dot"></div>100% FINALIZADOS</div>
-  </div>
-</nav>
-
-<div class="shell">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-l">
-      <h1>Central de <span class="cyan">Inteligência</span><br>de Chamados N2</h1>
-      <p>// 01/02/2026 → 28/02/2026 &nbsp;·&nbsp; SUPORTE AVANÇADO · BRASÍLIA-DF</p>
-    </div>
-    <div class="hero-sep"></div>
-    <div class="hero-r">Análise completa das tratativas do time N2 da <strong>Canaã Telecom</strong> — categorização por tipo de serviço, tempo de resolução e impacto operacional.</div>
-  </div>
-
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="kpi k1"><div class="kpi-icon">📋</div><div class="kpi-lbl">Total de Chamados</div><div class="kpi-val" data-t="100" data-s="">0</div><div class="kpi-sub">Fevereiro 2026 · 100% finalizados</div></div>
-    <div class="kpi k2"><div class="kpi-icon">🏷️</div><div class="kpi-lbl">Categorias Mapeadas</div><div class="kpi-val" data-t="9" data-s="">0</div><div class="kpi-sub">Palavras-chave identificadas</div></div>
-    <div class="kpi k3"><div class="kpi-icon">⏱️</div><div class="kpi-lbl">Tempo Médio Geral</div><div class="kpi-val" data-t="72" data-s="h">0</div><div class="kpi-sub">Horas por tratativa</div></div>
-    <div class="kpi k4"><div class="kpi-icon">🚨</div><div class="kpi-lbl">Maior Tempo Registrado</div><div class="kpi-val" data-t="498" data-s="h">0</div><div class="kpi-sub">Telefone Fixo · ID 503924</div></div>
-  </div>
-
-  <!-- ROW 1 -->
-  <div class="g2">
-    <div class="card" id="c1"><div class="sec">Distribuição &amp; Tempo por Categoria</div><div class="catlist" id="catList"></div></div>
-    <div class="card" id="c2"><div class="sec">Volume por Categoria</div><div class="ch-sm"><canvas id="donut"></canvas></div></div>
-  </div>
-
-  <!-- TIME CHART -->
-  <div class="card g1" id="c3">
-    <div class="sec">Tempo de Resolução por Categoria (horas)</div>
-    <div class="ch"><canvas id="timeChart"></canvas></div>
-  </div>
-
-  <!-- TABLE -->
-  <div class="card g1" id="c4">
-    <div class="sec">Detalhamento de Chamados</div>
-    <div class="filters">
-      <label>FILTRAR //</label>
-      <button class="fbtn on" data-cat="all">Todos</button>
-      <button class="fbtn" data-cat="Paramount">Paramount</button>
-      <button class="fbtn" data-cat="Telefone Fixo">Tel. Fixo</button>
-      <button class="fbtn" data-cat="Kaspersky">Kaspersky</button>
-      <button class="fbtn" data-cat="Ubook">Ubook</button>
-      <button class="fbtn" data-cat="HBO Max">HBO Max</button>
-      <button class="fbtn" data-cat="Canaã TV">Canaã TV</button>
-      <button class="fbtn" data-cat="Watch">Watch</button>
-      <button class="fbtn" data-cat="Liberação de Portas">Lib. Portas</button>
-      <button class="fbtn" data-cat="Playhub">Playhub</button>
-    </div>
-    <div class="tw">
-      <table>
-        <thead><tr>
-          <th data-s="id">ID <span class="si">↕</span></th>
-          <th data-s="cliente">Cliente <span class="si">↕</span></th>
-          <th data-s="cat">Categoria <span class="si">↕</span></th>
-          <th data-s="abertura">Abertura <span class="si">↕</span></th>
-          <th data-s="final">Finalização <span class="si">↕</span></th>
-          <th data-s="tempo">Tempo <span class="si">↕</span></th>
-          <th data-s="colaborador">Colaborador <span class="si">↕</span></th>
-        </tr></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-    <div class="pager"><div class="pager-info" id="pgInfo"></div><div class="pager-btns" id="pgBtns"></div></div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-logo">
-      <!-- Inline mini logo in footer -->
-      <svg viewBox="0 0 180 40" width="150" height="36" xmlns="http://www.w3.org/2000/svg" opacity="0.45">
-        <circle cx="18" cy="20" r="15" fill="#1a56d6"/>
-        <ellipse cx="18" cy="20" rx="19" ry="7" fill="none" stroke="#2979ff" stroke-width="1.2" opacity="0.7"/>
-        <polygon points="22,9 34,3 30,10" fill="white" opacity="0.9"/>
-        <polygon points="22,9 34,3 24,12" fill="#a8d8ff" opacity="0.7"/>
-        <text x="40" y="26" font-family="Rajdhani,sans-serif" font-size="20" font-weight="700" fill="white" letter-spacing="1">CANAÃ</text>
-        <text x="43" y="35" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="600" fill="rgba(255,255,255,0.45)" letter-spacing="4">TELECOM</text>
-      </svg>
-    </div>
-    <span>© 2026 CANAÃ TELECOM · N2 ANALYTICS · FEV/2026</span>
-  </div>
-</div>
-
-<script>
-// ── PARTICLES ────────────────────────────────────────────────────
-(function(){
-  const cvs=document.getElementById('cvs'),ctx=cvs.getContext('2d');
-  let W,H,pts=[];
-  function resize(){W=cvs.width=innerWidth;H=cvs.height=innerHeight;}
-  resize();window.addEventListener('resize',()=>{resize();init();});
-  function init(){
-    pts=[];const N=Math.floor(W*H/18000);
-    for(let i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5,a:Math.random()*.5+.1,hue:200+Math.random()*30});
-  }
-  init();
-  let mx=W/2,my=H/2;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-  function frame(){
-    ctx.clearRect(0,0,W,H);
-    pts.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;
-      if(p.x<0||p.x>W)p.vx*=-1;
-      if(p.y<0||p.y>H)p.vy*=-1;
-      const dx=p.x-mx,dy=p.y-my,dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<120){const f=.015*(1-dist/120);p.vx+=dx*f;p.vy+=dy*f;}
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`hsla(${p.hue},80%,70%,${p.a})`;ctx.fill();
-    });
-    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
-      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-      if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(41,121,255,${.15*(1-d/110)})`;ctx.lineWidth=.6;ctx.stroke();}
+      } catch (error) {
+        console.error("Erro ao carregar relatório:", error);
+        document.body.innerHTML += '<p style="color:red;">Erro ao carregar dados. Verifique se occurrences.json existe.</p>';
+      }
     }
-    requestAnimationFrame(frame);
-  }
-  frame();
-})();
 
-// ── LOGO HOVER INTERACTIONS ──────────────────────────────────────
-(function(){
-  const wrap = document.getElementById('logoWrap');
-  const globe = document.getElementById('lgGlobe');
-  const plane = document.getElementById('lgPlane');
-  const ring  = document.getElementById('lgRing');
-  const ul    = document.getElementById('lgUnderline');
-  const canaaText = document.querySelector('#lgCanaa text:first-child');
-
-  // Letter bounce on hover
-  let letterAnims = [];
-  wrap.addEventListener('mouseenter', () => {
-    // Accelerate ring
-    ring.style.animation = 'ringAnim 1.2s linear infinite';
-
-    // Globe glow pulse
-    globe.style.filter = 'drop-shadow(0 0 12px rgba(0,229,255,.7))';
-    globe.style.transform = 'scale(1.07)';
-    globe.style.transition = 'transform .35s cubic-bezier(.34,1.56,.64,1), filter .3s';
-
-    // Plane shoot out
-    plane.style.transform = 'translate(8px,-8px) scale(1.18)';
-    plane.style.transition = 'transform .45s cubic-bezier(.34,1.56,.64,1)';
-    plane.style.filter = 'drop-shadow(0 0 8px rgba(255,255,255,.9))';
-
-    // Underline slide in
-    ul.style.transform = 'scaleX(1)';
-    ul.style.transition = 'transform .4s .1s ease';
-
-    // Bounce each letter
-    if(canaaText){
-      const tspans = canaaText.querySelectorAll('tspan');
-      tspans.forEach((t,i) => {
-        letterAnims.push(setTimeout(()=>{
-          t.style.transition = 'transform .3s cubic-bezier(.34,1.56,.64,1)';
-          t.setAttribute('dy', '-4');
-          setTimeout(()=>t.setAttribute('dy','0'), 200);
-        }, i*55));
-      });
-    }
-  });
-
-  wrap.addEventListener('mouseleave', () => {
-    ring.style.animation = 'ringAnim 4s linear infinite';
-    globe.style.filter = '';
-    globe.style.transform = '';
-    plane.style.transform = '';
-    plane.style.filter = '';
-    ul.style.transform = 'scaleX(0)';
-    letterAnims.forEach(clearTimeout);
-    letterAnims = [];
-  });
-
-  // Add ring CSS animation
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes ringAnim {
-      from { stroke-dashoffset: 0; }
-      to { stroke-dashoffset: -180; }
-    }
-    #lgRing {
-      stroke-dasharray: 60 120;
-      animation: ringAnim 4s linear infinite;
-    }
-    #lgGlobe { transform-origin: 26px 29px; }
-    #lgPlane { transform-origin: 44px 14px; }
-    #lgUnderline { transform-origin: left center; transform: scaleX(0); }
-    .logo-text-canaa { transition: fill .3s, filter .3s; }
-    .logo-wrap:hover .logo-text-canaa { fill: #00e5ff; filter: drop-shadow(0 0 6px rgba(0,229,255,.5)); }
-    .logo-wrap:hover .logo-text-telecom { fill: #5b9bff; letter-spacing: 6px; transition: all .4s; }
-    .logo-text-telecom { transition: all .4s; }
-  `;
-  document.head.appendChild(style);
-})();
-
-// ── DATA ─────────────────────────────────────────────────────────
-const CATS=[
-  {name:'Paramount',          n:26,avg:60.3, mn:1.6, mx:220.4,c:'#ff5252'},
-  {name:'Telefone Fixo',      n:25,avg:106.0,mn:0.8, mx:498.1,c:'#00e5ff'},
-  {name:'Kaspersky',          n:19,avg:73.1, mn:1.6, mx:220.4,c:'#00e676'},
-  {name:'Ubook',              n:19,avg:73.1, mn:1.6, mx:220.4,c:'#ff9100'},
-  {name:'HBO Max',            n:19,avg:73.1, mn:1.6, mx:220.4,c:'#d500f9'},
-  {name:'Canaã TV',           n:19,avg:73.1, mn:1.6, mx:220.4,c:'#2979ff'},
-  {name:'Watch',              n:5, avg:25.5, mn:12.8,mx:67.0, c:'#ff4081'},
-  {name:'Liberação de Portas',n:4, avg:53.4, mn:0.1, mx:162.1,c:'#ffd740'},
-  {name:'Playhub',            n:1, avg:51.4, mn:51.4,mx:51.4, c:'#7c4dff'},
-];
-const ROWS=[
-  {id:'512634',cliente:'BENILSON BELOTI BARRETO',cat:'Watch',abertura:'28/02/2026 21:21',final:'05/03/2026 08:39',tempo:107.3,colaborador:'UBIRATAN A. ALBUQUERQUE'},
-  {id:'512596',cliente:'CASSIA NAARA PAIVA DE ABREU',cat:'Paramount',abertura:'28/02/2026 12:57',final:'28/02/2026 14:47',tempo:1.8,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'512596',cliente:'CASSIA NAARA PAIVA DE ABREU',cat:'Kaspersky',abertura:'28/02/2026 12:57',final:'28/02/2026 14:47',tempo:1.8,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'512596',cliente:'CASSIA NAARA PAIVA DE ABREU',cat:'Ubook',abertura:'28/02/2026 12:57',final:'28/02/2026 14:47',tempo:1.8,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'512596',cliente:'CASSIA NAARA PAIVA DE ABREU',cat:'HBO Max',abertura:'28/02/2026 12:57',final:'28/02/2026 14:47',tempo:1.8,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'512596',cliente:'CASSIA NAARA PAIVA DE ABREU',cat:'Canaã TV',abertura:'28/02/2026 12:57',final:'28/02/2026 14:47',tempo:1.8,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'511449',cliente:'WILSON BUNDCHEN',cat:'Outros',abertura:'25/02/2026 13:55',final:'27/02/2026 09:24',tempo:43.5,colaborador:'JOÃO VITOR SILVA LOPES'},
-  {id:'511157',cliente:'ALEXANDRE SILVA GONDIN',cat:'Outros',abertura:'24/02/2026 19:15',final:'27/02/2026 18:18',tempo:71.1,colaborador:'RAFAEL CÉSAR DA SILVA'},
-  {id:'510474',cliente:'LUCIANO DAS NEVES',cat:'Telefone Fixo',abertura:'23/02/2026 14:24',final:'28/02/2026 14:03',tempo:119.6,colaborador:'—'},
-  {id:'511020',cliente:'YARDS33 EMPREENDIMENTOS',cat:'Liberação de Portas',abertura:'24/02/2026 14:42',final:'24/02/2026 14:47',tempo:0.1,colaborador:'—'},
-  {id:'510966',cliente:'YARDS33 EMPREENDIMENTOS',cat:'Liberação de Portas',abertura:'24/02/2026 12:34',final:'24/02/2026 16:13',tempo:3.7,colaborador:'—'},
-  {id:'509733',cliente:'ANDREIA CAIXETA DE SOUZA SOARES',cat:'Telefone Fixo',abertura:'20/02/2026 10:10',final:'20/02/2026 13:17',tempo:3.1,colaborador:'—'},
-  {id:'509648',cliente:'MARZO MARCELO CARVALHO DE MELO',cat:'Watch',abertura:'19/02/2026 21:41',final:'20/02/2026 11:46',tempo:14.1,colaborador:'—'},
-  {id:'509646',cliente:'BRUNO CESAR BARBOSA ALVES',cat:'Watch',abertura:'19/02/2026 21:27',final:'20/02/2026 10:14',tempo:12.8,colaborador:'—'},
-  {id:'509644',cliente:'JOSE DE SOUSA CARVALHO NETO',cat:'Watch',abertura:'19/02/2026 21:15',final:'20/02/2026 12:12',tempo:14.9,colaborador:'—'},
-  {id:'509641',cliente:'MARCIO DA MOTA RIBEIRO',cat:'Watch',abertura:'19/02/2026 20:53',final:'20/02/2026 15:31',tempo:18.6,colaborador:'—'},
-  {id:'509285',cliente:'JOVANNI GAMA DELVAUX',cat:'Telefone Fixo',abertura:'19/02/2026 10:42',final:'19/02/2026 11:33',tempo:0.9,colaborador:'—'},
-  {id:'509003',cliente:'MDV CONFECCOES LTDA',cat:'Telefone Fixo',abertura:'18/02/2026 14:04',final:'19/02/2026 18:37',tempo:28.6,colaborador:'—'},
-  {id:'508828',cliente:'HERCULANO JOSE PEREIRA LEDO',cat:'Telefone Fixo',abertura:'18/02/2026 10:46',final:'18/02/2026 11:43',tempo:1.0,colaborador:'—'},
-  {id:'508783',cliente:'RUTH MELLO SALGADO',cat:'Telefone Fixo',abertura:'18/02/2026 09:46',final:'18/02/2026 10:50',tempo:1.1,colaborador:'—'},
-  {id:'508389',cliente:'COND. CONJ. NACIONAL DE TAGUATINGA',cat:'Telefone Fixo',abertura:'17/02/2026 08:45',final:'20/02/2026 16:09',tempo:79.4,colaborador:'—'},
-  {id:'508335',cliente:'MITRA ARQUIDIOCESANA DE BRASILIA',cat:'Telefone Fixo',abertura:'16/02/2026 15:37',final:'19/02/2026 19:10',tempo:75.5,colaborador:'—'},
-  {id:'508314',cliente:'M C COSTA COMERCIO DE ALIMENTOS',cat:'Telefone Fixo',abertura:'16/02/2026 13:32',final:'20/02/2026 17:10',tempo:99.6,colaborador:'—'},
-  {id:'508151',cliente:'BRUNO BRITO DE AZEVEDO',cat:'Watch',abertura:'14/02/2026 19:52',final:'17/02/2026 14:52',tempo:67.0,colaborador:'—'},
-  {id:'508000',cliente:'ANDREIA ANASTACIO',cat:'Telefone Fixo',abertura:'13/02/2026 18:46',final:'18/02/2026 09:24',tempo:110.6,colaborador:'—'},
-  {id:'507999',cliente:'ARC COMERCIO DE CALCADOS LTDA',cat:'Telefone Fixo',abertura:'13/02/2026 18:28',final:'19/02/2026 14:46',tempo:140.3,colaborador:'—'},
-  {id:'507876',cliente:'CITTI MEDICINA ESPECIALIZADA',cat:'Telefone Fixo',abertura:'13/02/2026 13:35',final:'19/02/2026 08:52',tempo:139.3,colaborador:'—'},
-  {id:'507738',cliente:'ADOLFO BITENCOURT RIBEIRO',cat:'Telefone Fixo',abertura:'13/02/2026 09:41',final:'18/02/2026 15:58',tempo:126.3,colaborador:'—'},
-  {id:'507493',cliente:'MARZUK COMERCIO DE ALIMENTOS',cat:'Telefone Fixo',abertura:'12/02/2026 13:46',final:'18/02/2026 14:23',tempo:144.6,colaborador:'—'},
-  {id:'507375',cliente:'CASA TRANSITORIA DE BRASILIA',cat:'Telefone Fixo',abertura:'12/02/2026 11:10',final:'19/02/2026 08:38',tempo:165.5,colaborador:'—'},
-  {id:'507350',cliente:'STAR CURSO DE FORMACAO E VIGILANTES',cat:'Telefone Fixo',abertura:'12/02/2026 10:39',final:'19/02/2026 08:33',tempo:165.9,colaborador:'—'},
-  {id:'507242',cliente:'ANDRE MARQUES LIMA',cat:'Telefone Fixo',abertura:'11/02/2026 21:41',final:'23/02/2026 09:03',tempo:275.4,colaborador:'—'},
-  {id:'507220',cliente:'TAYANE QUEIROZ DE OLIVEIRA',cat:'Telefone Fixo',abertura:'11/02/2026 18:47',final:'13/02/2026 14:07',tempo:43.3,colaborador:'—'},
-  {id:'507042',cliente:'VANELOS TECNOLOGIA LTDA',cat:'Liberação de Portas',abertura:'11/02/2026 14:31',final:'13/02/2026 14:09',tempo:47.6,colaborador:'—'},
-  {id:'506999',cliente:'IRONBR AMBIENTE SEGURO LTDA',cat:'Telefone Fixo',abertura:'11/02/2026 13:01',final:'18/02/2026 13:37',tempo:168.6,colaborador:'—'},
-  {id:'506893',cliente:'RAMON SANTOS LOPES BORGES',cat:'Playhub',abertura:'11/02/2026 10:04',final:'13/02/2026 13:30',tempo:51.4,colaborador:'—'},
-  {id:'506423',cliente:'CONCEICAO CORREIA BARBOSA',cat:'Telefone Fixo',abertura:'10/02/2026 11:02',final:'13/02/2026 10:57',tempo:71.9,colaborador:'—'},
-  {id:'505975',cliente:'MITRA ARQUIDIOCESANA DE BRASILIA',cat:'Telefone Fixo',abertura:'09/02/2026 11:10',final:'13/02/2026 08:51',tempo:93.7,colaborador:'—'},
-  {id:'505656',cliente:'TAYANE QUEIROZ DE OLIVEIRA',cat:'Telefone Fixo',abertura:'07/02/2026 12:29',final:'11/02/2026 11:26',tempo:95.0,colaborador:'—'},
-  {id:'503924',cliente:'KALLANGO TEC SOLUCOES',cat:'Telefone Fixo',abertura:'02/02/2026 17:19',final:'23/02/2026 11:27',tempo:498.1,colaborador:'—'},
-  {id:'503804',cliente:'JOVANNI GAMA DELVAUX',cat:'Telefone Fixo',abertura:'02/02/2026 15:04',final:'02/02/2026 15:53',tempo:0.8,colaborador:'—'},
-  {id:'503782',cliente:'ANA CLAUDIA LEONEZ DE OLIVEIRA',cat:'Liberação de Portas',abertura:'02/02/2026 14:12',final:'09/02/2026 08:19',tempo:162.1,colaborador:'—'},
-  {id:'503717',cliente:'SINUS OTORRINOLARINGOLOGIA',cat:'Telefone Fixo',abertura:'02/02/2026 12:07',final:'02/02/2026 13:55',tempo:1.8,colaborador:'—'},
-];
-
-function cc(n){const f=CATS.find(c=>c.name===n);return f?f.c:'#5b9bff';}
-function tb(h){const cls=h>=100?'hi':h>=48?'md':'lo';return`<span class="tb ${cls}">${h}h</span>`;}
-
-function countUp(el){
-  const t=+el.dataset.t,s=el.dataset.s||'';let v=0;const inc=t/60;
-  const id=setInterval(()=>{v=Math.min(v+inc,t);el.textContent=Math.round(v)+s;if(v>=t)clearInterval(id);},16);
-}
-
-const TT=document.getElementById('tt'),TTT=document.getElementById('tt-t'),TTB=document.getElementById('tt-b');
-function showTT(e,cat){TTT.textContent=cat.name;TTB.innerHTML=`Chamados: <b style="color:#eef4ff">${cat.n}</b><br>Média: <b style="color:#eef4ff">${cat.avg}h</b><br>Mín: ${cat.mn}h · Máx: ${cat.mx}h`;TT.classList.add('show');}
-function hideTT(){TT.classList.remove('show');}
-document.addEventListener('mousemove',e=>{TT.style.left=(e.clientX+15)+'px';TT.style.top=(e.clientY-6)+'px';});
-
-function buildCatList(){
-  const max=Math.max(...CATS.map(c=>c.n));
-  const el=document.getElementById('catList');
-  CATS.forEach(cat=>{
-    const pct=(cat.n/max*100).toFixed(1);
-    const cls=cat.avg>=100?'hi':cat.avg>=50?'md':'lo';
-    const d=document.createElement('div');
-    d.className='catrow';d.dataset.cat=cat.name;
-    d.innerHTML=`<div class="catrow-dot" style="background:${cat.c};box-shadow:0 0 6px ${cat.c}88"></div><div class="catrow-name">${cat.name}</div><div class="catrow-bar-bg"><div class="catrow-bar" style="background:linear-gradient(90deg,${cat.c},${cat.c}88)" data-p="${pct}"></div></div><div class="catrow-n" style="color:${cat.c}">${cat.n}</div><div class="catrow-t"><span class="tb ${cls}">${cat.avg}h</span></div>`;
-    d.addEventListener('click',()=>{document.querySelectorAll('.catrow').forEach(r=>r.classList.remove('on'));d.classList.add('on');filterBy(cat.name);document.querySelectorAll('.fbtn').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat.name));});
-    d.addEventListener('mouseenter',e=>showTT(e,cat));d.addEventListener('mouseleave',hideTT);
-    el.appendChild(d);
-  });
-  setTimeout(()=>document.querySelectorAll('.catrow-bar').forEach(b=>b.style.width=b.dataset.p+'%'),400);
-}
-
-function buildDonut(){
-  const ctx=document.getElementById('donut').getContext('2d');
-  new Chart(ctx,{type:'doughnut',data:{labels:CATS.map(c=>c.name),datasets:[{data:CATS.map(c=>c.n),backgroundColor:CATS.map(c=>c.c+'bb'),borderColor:CATS.map(c=>c.c),borderWidth:2,hoverOffset:14,hoverBackgroundColor:CATS.map(c=>c.c)}]},options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(5,21,48,.97)',borderColor:'rgba(41,121,255,.4)',borderWidth:1,titleColor:'#00e5ff',bodyColor:'#a8c8ff',titleFont:{family:'Rajdhani',size:15,weight:'700'},bodyFont:{family:'Share Tech Mono',size:11},padding:12,callbacks:{label:ctx=>` ${ctx.raw} chamados — ${ctx.raw}%`}}},animation:{animateRotate:true,duration:1600,easing:'easeInOutQuart'},onHover:(evt,els,chart)=>{chart.canvas.style.filter=els.length?'drop-shadow(0 0 14px rgba(41,121,255,.4))':'none';}}});
-}
-
-function buildTimeChart(){
-  const ctx=document.getElementById('timeChart').getContext('2d');
-  const s=[...CATS].sort((a,b)=>b.avg-a.avg);
-  new Chart(ctx,{type:'bar',data:{labels:s.map(c=>c.name),datasets:[{label:'Máximo',data:s.map(c=>c.mx),backgroundColor:s.map(c=>c.c+'22'),borderColor:s.map(c=>c.c+'55'),borderWidth:1,borderRadius:4,hoverBackgroundColor:s.map(c=>c.c+'44')},{label:'Médio',data:s.map(c=>c.avg),backgroundColor:s.map(c=>c.c+'cc'),borderColor:s.map(c=>c.c),borderWidth:1,borderRadius:4,hoverBackgroundColor:s.map(c=>c.c),hoverBorderWidth:2},{label:'Mínimo',data:s.map(c=>c.mn),backgroundColor:s.map(c=>'rgba(255,255,255,.07)'),borderColor:s.map(c=>'rgba(255,255,255,.2)'),borderWidth:1,borderRadius:4,hoverBackgroundColor:s.map(c=>'rgba(255,255,255,.15)')}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#5b9bff',font:{family:'Share Tech Mono',size:11},boxWidth:14,padding:20}},tooltip:{backgroundColor:'rgba(5,21,48,.97)',borderColor:'rgba(41,121,255,.4)',borderWidth:1,titleColor:'#00e5ff',bodyColor:'#a8c8ff',titleFont:{family:'Rajdhani',size:14,weight:'700'},bodyFont:{family:'Share Tech Mono',size:11},padding:12,callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.raw}h`}}},scales:{x:{ticks:{color:'#5b9bff',font:{family:'Exo 2',size:11,weight:'600'}},grid:{color:'rgba(41,121,255,.1)'}},y:{ticks:{color:'#5b9bff',font:{family:'Share Tech Mono',size:10},callback:v=>v+'h'},grid:{color:'rgba(41,121,255,.1)'}}},animation:{duration:1600,easing:'easeInOutQuart'},onHover:(evt,els,chart)=>{chart.canvas.style.cursor=els.length?'crosshair':'default';chart.canvas.style.filter=els.length?'drop-shadow(0 0 12px rgba(41,121,255,.3))':'none';}}});
-}
-
-let filt='all',sk=null,sa=true,pg=1;const PG=20;
-function filterBy(c){filt=c;pg=1;render();}
-function render(){
-  let data=filt==='all'?ROWS:ROWS.filter(r=>r.cat===filt);
-  if(sk){data=[...data].sort((a,b)=>{let A=a[sk],B=b[sk];if(sk==='tempo'){A=+A;B=+B;}else{A=String(A).toLowerCase();B=String(B).toLowerCase();}return sa?(A>B?1:-1):(A<B?1:-1);});}
-  const tot=data.length,pages=Math.ceil(tot/PG);
-  const sl=data.slice((pg-1)*PG,(pg-1)*PG+PG);
-  const tbody=document.getElementById('tbody');tbody.innerHTML='';
-  sl.forEach((r,i)=>{
-    const col=cc(r.cat);const tr=document.createElement('tr');tr.style.animationDelay=(i*.022)+'s';
-    tr.innerHTML=`<td class="id-c" style="color:${col};text-shadow:0 0 8px ${col}55">${r.id}</td><td>${r.cliente}</td><td><span class="ctag" style="color:${col};border-color:${col}40;background:${col}12"><span class="ctag-dot" style="background:${col};box-shadow:0 0 5px ${col}"></span>${r.cat}</span></td><td class="mono">${r.abertura}</td><td class="mono">${r.final}</td><td>${tb(r.tempo)}</td><td class="mono">${r.colaborador}</td>`;
-    tbody.appendChild(tr);
-  });
-  document.getElementById('pgInfo').textContent=`${(pg-1)*PG+1}–${Math.min(pg*PG,tot)} de ${tot} registros`;
-  const pb=document.getElementById('pgBtns');pb.innerHTML='';
-  const mk=(l,p)=>{const b=document.createElement('button');b.className='pbtn'+(p===pg?' on':'');b.textContent=l;b.onclick=()=>{pg=p;render();};pb.appendChild(b);};
-  if(pg>1)mk('←',pg-1);
-  for(let i=Math.max(1,pg-1);i<=Math.min(pages,pg+2);i++)mk(i,i);
-  if(pg<pages)mk('→',pg+1);
-}
-
-const IO=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');IO.unobserve(e.target);}});},{threshold:.06});
-
-window.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.kpi').forEach((k,i)=>{setTimeout(()=>{k.style.opacity='1';k.style.transform='translateY(0)';k.style.transition='opacity .5s ease,transform .5s ease,box-shadow .25s,border-color .25s';},120+i*90);});
-  setTimeout(()=>document.querySelectorAll('.kpi-val[data-t]').forEach(countUp),350);
-  ['c1','c2','c3','c4'].forEach(id=>{const el=document.getElementById(id);if(el)IO.observe(el);});
-  setTimeout(buildCatList,150);setTimeout(buildDonut,300);setTimeout(buildTimeChart,450);render();
-  document.querySelectorAll('.fbtn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');const cat=b.dataset.cat;filterBy(cat);document.querySelectorAll('.catrow').forEach(r=>r.classList.toggle('on',r.dataset.cat===cat));});});
-  document.querySelectorAll('th[data-s]').forEach(th=>{th.addEventListener('click',()=>{const k=th.dataset.s;if(sk===k)sa=!sa;else{sk=k;sa=true;}document.querySelectorAll('th').forEach(t=>t.classList.toggle('sorted',t.dataset.s===k));render();});});
-});
-</script>
+    // Carrega ao abrir a página
+    window.onload = carregarRelatorio;
+  </script>
 </body>
 </html>
